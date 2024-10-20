@@ -1,3 +1,0 @@
-/home/alex/repo/assignment_1/build/CMakeFiles/cluster_extraction.dir
-/home/alex/repo/assignment_1/build/CMakeFiles/edit_cache.dir
-/home/alex/repo/assignment_1/build/CMakeFiles/rebuild_cache.dir
