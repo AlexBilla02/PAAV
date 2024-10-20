@@ -23,7 +23,7 @@
 #include <cmath>
 #include <format>
 
-//#define USE_PCL_LIBRARY
+#define USE_PCL_LIBRARY
 using namespace lidar_obstacle_detection;
 
 typedef std::unordered_set<int> my_visited_set_t;
@@ -107,29 +107,28 @@ std::vector<pcl::PointIndices> euclideanCluster(typename pcl::PointCloud<pcl::Po
     my_visited_set_t visited;  // insieme di punti già visitati
     std::vector<pcl::PointIndices> clusters;  // vettore finale che conterrà i cluster
 
-    // Cicliamo su ogni punto del cloud
+    // ciclo su ogni punto del cloud
     for (int i = 0; i < cloud->size(); ++i)
     {
-        // Se il punto non è stato visitato
+        // Se il punto non è stato visitato allora continuo con l'analisi
         if (visited.find(i) == visited.end())
         {
-            // Creiamo un nuovo cluster
+            // Creo nuovo cluster
             std::vector<int> cluster;
 
-            // Chiamiamo la funzione proximity per costruire il cluster
+            // Chiamo la funzione proximity per costruire il cluster
             proximity(cloud, i, tree, distanceTol, visited, cluster, setMaxClusterSize);
 
-            // Controlliamo la dimensione del cluster
+            // se la dimensione del cluster è inclusa nel range allora posso creare l'oggetto poind_indices dei cluster
             if (cluster.size() >= setMinClusterSize && cluster.size() <= setMaxClusterSize)
             {
-                // Creiamo un oggetto PointIndices per immagazzinare gli indici del cluster
                 pcl::PointIndices point_indices;
-                point_indices.indices = cluster;  // Aggiungiamo gli indici trovati
-                clusters.push_back(point_indices);  // Aggiungiamo il cluster al vettore finale
+                point_indices.indices = cluster;  // Aggiungo gli indici trovati nel cluster
+                clusters.push_back(point_indices);  // Aggiungo il cluster al vettore finale
             }
         }
     }
-    return clusters;  // Ritorniamo tutti i cluster trovati
+    return clusters;  
 }
 
 void 
@@ -138,16 +137,16 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
     // TODO: 1) Downsample the dataset 
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered(new pcl::PointCloud<pcl::PointXYZ>);
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_plane (new pcl::PointCloud<pcl::PointXYZ> ());
-       // Create the filtering object
+
    pcl::VoxelGrid<pcl::PointXYZ> sor;
    sor.setInputCloud (cloud);
-   sor.setLeafSize (0.16f, 0.16f, 0.16f); //this value defines how much the PC is filtered
+   sor.setLeafSize (0.16f, 0.16f, 0.16f); //DOWNSAMPLE SET 
    sor.filter (*cloud_filtered); 
    std::cerr << "PointCloud after filtering: " << cloud_filtered->width * cloud_filtered->height << " data points (" << pcl::getFieldsList (*cloud_filtered) << ")." << std::endl;
 
 
     // 2) here we crop the points that are far away from us, in which we are not interested
-    //non toccare, va bene così di default
+    //non toccare, va bene così di default per il primo dataset
     pcl::CropBox<pcl::PointXYZ> cb(true);
     cb.setInputCloud(cloud_filtered);
     cb.setMin(Eigen::Vector4f (-20, -6, -2, 1));
@@ -157,7 +156,7 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
      
    
 
-    // TODO: 3) Segmentation and apply RANSAC
+    // TODO: 3) Segmentation and apply RANSAC per andare a rimuovere il piano del pavimento/strada
     pcl::ModelCoefficients::Ptr coefficients(new pcl::ModelCoefficients);
     pcl::PointIndices::Ptr inliers(new pcl::PointIndices);
 
@@ -189,11 +188,10 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
     std::cerr << "PointCloud after RANSAC: " << cloud_filtered->width * cloud_filtered->height << " data points (" << pcl::getFieldsList (*cloud_filtered) << ")." << std::endl;
 
 
-    // TODO: 4) iterate over the filtered cloud, segment and remove the planar inliers 
 
 
     // TODO: 5) Create the KDTree and the vector of PointIndices
- // Creating the KdTree object for the search method of the extraction
+    // Creating the KdTree object for the search method of the extraction
     pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
     tree->setInputCloud (cloud_filtered); 
     // TODO: 6) Set the spatial tolerance for new cluster candidates (pay attention to the tolerance!!!)
@@ -203,17 +201,15 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
 
         //Set the spatial tolerance for new cluster candidates
         //If you take a very small value, it can happen that an actual object can be seen as multiple clusters. On the other hand, if you set the value too high, it could happen, that multiple objects are seen as one cluster
-        ec.setClusterTolerance (0.25); // 2cm
+        ec.setClusterTolerance (0.25); // 25cm
 
-        //We impose that the clusters found must have at least setMinClusterSize() points and maximum setMaxClusterSize() points
-        ec.setMinClusterSize (100);
-        ec.setMaxClusterSize (25000);
+        ec.setMinClusterSize (100); //num minimo  di punti che deve avere il cluster
+        ec.setMaxClusterSize (25000);   //num massimo di punti che può avere il cluster
         ec.setSearchMethod (tree);
         ec.setInputCloud (cloud_filtered);
         ec.extract (cluster_indices);
         std::cout<<cluster_indices.size()<<endl;
-        //PCL functions
-        //HERE 6)
+        
     #else
         // Optional assignment
         my_pcl::KdTree treeM;
@@ -226,12 +222,7 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
     //renderer.RenderPointCloud(cloud_filtered,"originalCloud",colors[2]);
 
 
-    /**Now we extracted the clusters out of our point cloud and saved the indices in cluster_indices. 
-
-    To separate each cluster out of the vector<PointIndices> we have to iterate through cluster_indices, create a new PointCloud for each entry and write all points of the current cluster in the PointCloud.
-    Compute euclidean distance
-    **/
-    // Calcolo il punto centrale del dataset (centroide), che mi servirà per la distanza del veicolo dagli elementi circostanti
+    // Considero il punto centrale del dataset (centroide), che mi servirà per la distanza del veicolo dagli elementi circostanti
     pcl::PointXYZ centroid(0.0, 0.0, 0.0);
     
 
@@ -255,7 +246,7 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
         //Here we create the bounding box on the detected clusters
         pcl::PointXYZ minPt, maxPt;
         pcl::getMinMax3D(*cloud_cluster, minPt, maxPt);
-        // Calcolo del punto centrale del bounding box
+        // Calcolo del punto centrale del bounding box, che mi servirà per la distanza dal punto centrale (il mio veicolo)
         float boxCenterX = (minPt.x + maxPt.x) / 2;
         float boxCenterY = (minPt.y + maxPt.y) / 2;
         float boxCenterZ = (minPt.z + maxPt.z) / 2;
@@ -264,11 +255,13 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
         maxPt.x, maxPt.y, maxPt.z};
            // Prendi il primo punto del cluster
         //pcl::PointXYZ firstPoint = cloud_cluster->points[0];
-        pcl::PointXYZ firstPoint(boxCenterX, boxCenterY, boxCenterZ);
+
+        //prendo il punto centrale del box per calcolare la distanza dal mio veicolo
+        pcl::PointXYZ objectPoint(boxCenterX, boxCenterY, boxCenterZ);
         // Calcola la distanza tra il centroide (0,0,0) e il primo punto del cluster
-        float distanceFromCentroid = calculateDistance(firstPoint, centroid);
+        float distanceFromCentroid = calculateDistance(objectPoint, centroid);
         std::stringstream ss;
-        ss << std::fixed << std::setprecision(2) << distanceFromCentroid;
+        ss << std::fixed << std::setprecision(2) << distanceFromCentroid; //per settare la distanza con due valori decimali
         std::string mystring = ss.str();        
         // Converti la distanza in stringa da visualizzare
         std::string distanceText =  mystring + " m";
@@ -333,7 +326,7 @@ int main(int argc, char* argv[])
         
 
         renderer.SpinViewerOnce();
-        std::this_thread::sleep_for(std::chrono::milliseconds(20));  // Ritardo di 1000 ms (1 secondo)
+        //std::this_thread::sleep_for(std::chrono::milliseconds(20));  // Ritardo di 1000 ms (1 secondo)
     }
 }
 

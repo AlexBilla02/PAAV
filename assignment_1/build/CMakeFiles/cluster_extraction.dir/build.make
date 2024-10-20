@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/alex/paav/assignment_1
+CMAKE_SOURCE_DIR = /home/alex/repo/assignment_1
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/alex/paav/assignment_1/build
+CMAKE_BINARY_DIR = /home/alex/repo/assignment_1/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/cluster_extraction.dir/depend.make
@@ -70,32 +70,32 @@ include CMakeFiles/cluster_extraction.dir/progress.make
 include CMakeFiles/cluster_extraction.dir/flags.make
 
 CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o: CMakeFiles/cluster_extraction.dir/flags.make
-CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o: /home/alex/paav/assignment_1/src/cluster_extraction.cpp
+CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o: /home/alex/repo/assignment_1/src/cluster_extraction.cpp
 CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o: CMakeFiles/cluster_extraction.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alex/paav/assignment_1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o -MF CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o.d -o CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o -c /home/alex/paav/assignment_1/src/cluster_extraction.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alex/repo/assignment_1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o -MF CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o.d -o CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o -c /home/alex/repo/assignment_1/src/cluster_extraction.cpp
 
 CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alex/paav/assignment_1/src/cluster_extraction.cpp > CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alex/repo/assignment_1/src/cluster_extraction.cpp > CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.i
 
 CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alex/paav/assignment_1/src/cluster_extraction.cpp -o CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alex/repo/assignment_1/src/cluster_extraction.cpp -o CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.s
 
 CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o: CMakeFiles/cluster_extraction.dir/flags.make
-CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o: /home/alex/paav/assignment_1/src/Renderer.cpp
+CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o: /home/alex/repo/assignment_1/src/Renderer.cpp
 CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o: CMakeFiles/cluster_extraction.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alex/paav/assignment_1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o -MF CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o.d -o CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o -c /home/alex/paav/assignment_1/src/Renderer.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/alex/repo/assignment_1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o -MF CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o.d -o CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o -c /home/alex/repo/assignment_1/src/Renderer.cpp
 
 CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alex/paav/assignment_1/src/Renderer.cpp > CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/alex/repo/assignment_1/src/Renderer.cpp > CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.i
 
 CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alex/paav/assignment_1/src/Renderer.cpp -o CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/alex/repo/assignment_1/src/Renderer.cpp -o CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.s
 
 # Object files for target cluster_extraction
 cluster_extraction_OBJECTS = \
@@ -196,7 +196,7 @@ cluster_extraction: /usr/lib/x86_64-linux-gnu/libflann_cpp_s.a
 cluster_extraction: /usr/lib/x86_64-linux-gnu/liblz4.so
 cluster_extraction: /usr/lib/x86_64-linux-gnu/libqhull_r.so.8.0.2
 cluster_extraction: CMakeFiles/cluster_extraction.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/alex/paav/assignment_1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable cluster_extraction"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/alex/repo/assignment_1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable cluster_extraction"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/cluster_extraction.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -208,6 +208,6 @@ CMakeFiles/cluster_extraction.dir/clean:
 .PHONY : CMakeFiles/cluster_extraction.dir/clean
 
 CMakeFiles/cluster_extraction.dir/depend:
-	cd /home/alex/paav/assignment_1/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/alex/paav/assignment_1 /home/alex/paav/assignment_1 /home/alex/paav/assignment_1/build /home/alex/paav/assignment_1/build /home/alex/paav/assignment_1/build/CMakeFiles/cluster_extraction.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/alex/repo/assignment_1/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/alex/repo/assignment_1 /home/alex/repo/assignment_1 /home/alex/repo/assignment_1/build /home/alex/repo/assignment_1/build /home/alex/repo/assignment_1/build/CMakeFiles/cluster_extraction.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/cluster_extraction.dir/depend
 

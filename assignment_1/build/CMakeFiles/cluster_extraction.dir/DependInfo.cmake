@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/alex/paav/assignment_1/src/Renderer.cpp" "CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o" "gcc" "CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o.d"
-  "/home/alex/paav/assignment_1/src/cluster_extraction.cpp" "CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o" "gcc" "CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o.d"
+  "/home/alex/repo/assignment_1/src/Renderer.cpp" "CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o" "gcc" "CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o.d"
+  "/home/alex/repo/assignment_1/src/cluster_extraction.cpp" "CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o" "gcc" "CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

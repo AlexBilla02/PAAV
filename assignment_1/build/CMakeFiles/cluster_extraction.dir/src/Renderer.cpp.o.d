@@ -1,7 +1,7 @@
 CMakeFiles/cluster_extraction.dir/src/Renderer.cpp.o: \
- /home/alex/paav/assignment_1/src/Renderer.cpp /usr/include/stdc-predef.h \
- /home/alex/paav/assignment_1/src/../include/Renderer.hpp \
- /home/alex/paav/assignment_1/src/../include/../include/Box.hpp \
+ /home/alex/repo/assignment_1/src/Renderer.cpp /usr/include/stdc-predef.h \
+ /home/alex/repo/assignment_1/src/../include/Renderer.hpp \
+ /home/alex/repo/assignment_1/src/../include/../include/Box.hpp \
  /usr/include/eigen3/Eigen/Geometry /usr/include/eigen3/Eigen/Core \
  /usr/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
  /usr/include/eigen3/Eigen/src/Core/util/Macros.h \

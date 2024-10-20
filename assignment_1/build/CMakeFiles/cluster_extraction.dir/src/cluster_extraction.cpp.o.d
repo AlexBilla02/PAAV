@@ -1,5 +1,5 @@
 CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o: \
- /home/alex/paav/assignment_1/src/cluster_extraction.cpp \
+ /home/alex/repo/assignment_1/src/cluster_extraction.cpp \
  /usr/include/stdc-predef.h /usr/include/pcl-1.14/pcl/ModelCoefficients.h \
  /usr/include/c++/13/vector /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
@@ -1297,8 +1297,8 @@ CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o: \
  /usr/include/boost/random/uniform_01.hpp \
  /usr/include/pcl-1.14/pcl/segmentation/extract_clusters.h \
  /usr/include/pcl-1.14/pcl/filters/crop_box.h \
- /home/alex/paav/assignment_1/src/../include/Renderer.hpp \
- /home/alex/paav/assignment_1/src/../include/../include/Box.hpp \
+ /home/alex/repo/assignment_1/src/../include/Renderer.hpp \
+ /home/alex/repo/assignment_1/src/../include/../include/Box.hpp \
  /usr/include/pcl-1.14/pcl/visualization/pcl_visualizer.h \
  /usr/include/pcl-1.14/pcl/TextureMesh.h \
  /usr/include/pcl-1.14/pcl/visualization/common/actor_map.h \
@@ -1751,6 +1751,6 @@ CMakeFiles/cluster_extraction.dir/src/cluster_extraction.cpp.o: \
  /usr/include/c++/13/bits/this_thread_sleep.h /usr/include/c++/13/chrono \
  /usr/include/c++/13/unordered_set \
  /usr/include/c++/13/bits/unordered_set.h \
- /home/alex/paav/assignment_1/src/../include/tree_utilities.hpp \
- /home/alex/paav/assignment_1/src/../include/Renderer.hpp \
+ /home/alex/repo/assignment_1/src/../include/tree_utilities.hpp \
+ /home/alex/repo/assignment_1/src/../include/Renderer.hpp \
  /usr/include/c++/13/format
