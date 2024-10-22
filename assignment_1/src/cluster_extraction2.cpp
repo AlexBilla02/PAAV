@@ -140,7 +140,7 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
 
    pcl::VoxelGrid<pcl::PointXYZ> sor;
    sor.setInputCloud (cloud);
-   sor.setLeafSize (0.16f, 0.16f, 0.16f); //DOWNSAMPLE SET 
+   sor.setLeafSize (0.20f, 0.20f, 0.20f); //DOWNSAMPLE SET 
    sor.filter (*cloud_filtered); 
    std::cerr << "PointCloud after filtering: " << cloud_filtered->width * cloud_filtered->height << " data points (" << pcl::getFieldsList (*cloud_filtered) << ")." << std::endl;
 
@@ -164,7 +164,7 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
     seg.setModelType(pcl::SACMODEL_PLANE);    // Identifica il piano
     seg.setMethodType(pcl::SAC_RANSAC);       // Utilizza RANSAC per il fitting del modello
     seg.setMaxIterations(100);                // Numero massimo di iterazioni
-    seg.setDistanceThreshold(0.30);            // Distanza massima di un punto per essere considerato inlier
+    seg.setDistanceThreshold(0.25);            // Distanza massima di un punto per essere considerato inlier
     seg.setInputCloud(cloud_filtered);
     seg.segment(*inliers, *coefficients);
 
@@ -187,6 +187,7 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
     extract.filter(*cloud_filtered);  // Rimuovi il piano dalla nuvola di punti filtrata
     std::cerr << "PointCloud after RANSAC: " << cloud_filtered->width * cloud_filtered->height << " data points (" << pcl::getFieldsList (*cloud_filtered) << ")." << std::endl;
 
+    renderer.RenderPointCloud(cloud_filtered,"originalCloud");
 
 
 
@@ -201,9 +202,9 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
 
         //Set the spatial tolerance for new cluster candidates
         //If you take a very small value, it can happen that an actual object can be seen as multiple clusters. On the other hand, if you set the value too high, it could happen, that multiple objects are seen as one cluster
-        ec.setClusterTolerance (0.25); // 25cm
+        ec.setClusterTolerance (0.35); 
 
-        ec.setMinClusterSize (100); //num minimo  di punti che deve avere il cluster
+        ec.setMinClusterSize (25); //num minimo  di punti che deve avere il cluster
         ec.setMaxClusterSize (25000);   //num massimo di punti che può avere il cluster
         ec.setSearchMethod (tree);
         ec.setInputCloud (cloud_filtered);
@@ -219,7 +220,6 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
     #endif
 
     std::vector<Color> colors = {Color(1,0,0), Color(1,1,0), Color(0,0,1), Color(1,0,1), Color(0,1,1)};
-    //renderer.RenderPointCloud(cloud_filtered,"originalCloud",colors[2]);
 
 
     // Considero il punto centrale del dataset (centroide), che mi servirà per la distanza del veicolo dagli elementi circostanti
@@ -278,7 +278,7 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
 
         //TODO: 9) Here you can color the vehicles that are both in front and 5 meters away from the ego vehicle
         //please take a look at the function RenderBox to see how to color the box
-        if(distanceFromCentroid<5)
+        if(distanceFromCentroid<5 && boxCenterX > 0)
             renderer.RenderBox(box, j,colors[0]);
         else
             renderer.RenderBox(box, j,colors[3]);
@@ -298,7 +298,7 @@ int main(int argc, char* argv[])
 
     pcl::PointCloud<pcl::PointXYZ>::Ptr input_cloud (new pcl::PointCloud<pcl::PointXYZ>);
 
-    std::vector<boost::filesystem::path> stream(boost::filesystem::directory_iterator{"../dataset_1"},
+    std::vector<boost::filesystem::path> stream(boost::filesystem::directory_iterator{"../dataset_2"},
                                                 boost::filesystem::directory_iterator{});
    
     // sort files in ascending (chronological) order

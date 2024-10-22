@@ -1,0 +1,22 @@
+Ho realizzato un codice sorgente diverso (/src/cluster_extraction2.cpp) per provare a trovare la soluzione per il secondo dataset.
+Per eseguirlo non sono andato a cambiare il Makefile, quindi è necessario rinominare il primo cluster_extraction.cpp in un altro modo e rinominare il secondo in cluster_extraction.cpp
+
+Ho provato a cambiare i vari valori alle funzioni per limitare la nuvola di punti tramite VoxelGrid
+Successivamente sono stati croppati tutti quei punti molto lontani dal nostro veicolo e che quindi non ci riguardano, in modo corretto.
+Per questo Dataset rimangono però alcuni muri ai lati della nuvola di punti che non vengono eliminati dalla fase precedente.
+È poi stato tolto il piano della strada in modo corretto tramite RANSAC.
+
+Per andare a eliminare dalla nuvola di punti anche i piani relativi ai muri si potrebbe pensare di implementare un RANSAC per piani verticali, individuando così i muri ed eliminarli.
+Non si tratta però di un problema enorme però perché considerando i muri come dei cluster, ovvero oggetti, il veicolo considera questi oggetti molto grandi e il suo obiettivo finale in ogni caso dovrebbe essere quello di evitarli.
+Non filtrando questi muri si ottengono però molti più punti del necessario nella nuvola.
+
+È stata successivamente impostata la fase di clustering degli elementi all'interno del dataset.
+Per i veicoli, ovvero la macchina dietro e il motorino, e per le persone nell'ambiente non ci sono problemi.
+È più problematica l'individuazione dei paletti con le catene e dei paletti più alti.
+Impostare un MinClusterSize molto basso per individuare questi paletti funziona, non in maniera perfetta però, soprattutto per le catene.
+Impostando però il MinClusterSize con un valore basso si va incontro ad un calo netto di prestazioni (arrivando a una media di 20/25fps sul mio dispositivo).
+Ho provato a filtrare ancora più punti col VoxelGrid e quindi impostando un valore minore per MinClusterSize per individuare i paletti, per provare ad aumentare le prestazioni, ma non è sufficiente.
+
+Un ulteriore problema è dato dal fatto che alcuni elementi nell'ambiente occupando un determinato spazio, ed utilizzando dei box per identificarli può sembrare che questi elementi
+occupino uno spazio diverso da quello della realtà.
+Per risolvere questo problema si può pensare di utilizzare talvolta anche forme diverse per rappresentare i cluster individuati.
