@@ -258,7 +258,12 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
 
         //prendo il punto centrale del box per calcolare la distanza dal mio veicolo
         pcl::PointXYZ objectPoint(boxCenterX, boxCenterY, boxCenterZ);
-        // Calcola la distanza tra il centroide (0,0,0) e il primo punto del cluster
+        //Cambiare boxCenterX e boxCenterY in minPt.x e minPt.y per andare ad avere una distanza col punto più "vicino" del box e non un punto medio
+        //ovvero in      pcl::PointXYZ objectPoint(minPt.x, minPt.y, boxCenterZ);
+
+
+
+        // Calcola la distanza tra il centroide (0,0,0) e il punto del cluster
         float distanceFromCentroid = calculateDistance(objectPoint, centroid);
         std::stringstream ss;
         ss << std::fixed << std::setprecision(2) << distanceFromCentroid; //per settare la distanza con due valori decimali
@@ -278,8 +283,9 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
 
         //TODO: 9) Here you can color the vehicles that are both in front and 5 meters away from the ego vehicle
         //please take a look at the function RenderBox to see how to color the box
-        if(distanceFromCentroid<5)
-            renderer.RenderBox(box, j,colors[0]);
+        if(distanceFromCentroid<5 && (minPt.x>0 || maxPt.x>0))
+                renderer.RenderBox(box, j,colors[0]);
+        
         else
             renderer.RenderBox(box, j,colors[3]);
         ++clusterId;

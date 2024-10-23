@@ -19,4 +19,4 @@ Ho provato a filtrare ancora più punti col VoxelGrid e quindi impostando un val
 
 Un ulteriore problema è dato dal fatto che alcuni elementi nell'ambiente occupando un determinato spazio dalla forma irregolare, ed utilizzando dei box per identificarli, può sembrare che questi elementi
 occupino uno spazio diverso da quello della realtà.
-Per risolvere questo problema si può pensare di utilizzare talvolta anche forme diverse per rappresentare i cluster individuati oltre che dei semplici box.
+Per risolvere questo problema si può pensare di utilizzare talvolta anche forme diverse per rappresentare i cluster individuati oltre ai semplici box.
