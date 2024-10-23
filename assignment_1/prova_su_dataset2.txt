@@ -17,6 +17,6 @@ Impostare un MinClusterSize molto basso per individuare questi paletti funziona,
 Impostando però il MinClusterSize con un valore basso si va incontro ad un calo netto di prestazioni (arrivando a una media di 20/25fps sul mio dispositivo).
 Ho provato a filtrare ancora più punti col VoxelGrid e quindi impostando un valore minore per MinClusterSize per individuare i paletti, per provare ad aumentare le prestazioni, ma non è sufficiente.
 
-Un ulteriore problema è dato dal fatto che alcuni elementi nell'ambiente occupando un determinato spazio, ed utilizzando dei box per identificarli può sembrare che questi elementi
+Un ulteriore problema è dato dal fatto che alcuni elementi nell'ambiente occupando un determinato spazio dalla forma irregolare, ed utilizzando dei box per identificarli, può sembrare che questi elementi
 occupino uno spazio diverso da quello della realtà.
-Per risolvere questo problema si può pensare di utilizzare talvolta anche forme diverse per rappresentare i cluster individuati.
+Per risolvere questo problema si può pensare di utilizzare talvolta anche forme diverse per rappresentare i cluster individuati oltre che dei semplici box.
