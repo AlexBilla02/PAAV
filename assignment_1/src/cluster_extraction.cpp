@@ -201,9 +201,9 @@ ProcessAndRenderPointCloud (Renderer& renderer, pcl::PointCloud<pcl::PointXYZ>::
 
         //Set the spatial tolerance for new cluster candidates
         //If you take a very small value, it can happen that an actual object can be seen as multiple clusters. On the other hand, if you set the value too high, it could happen, that multiple objects are seen as one cluster
-        ec.setClusterTolerance (0.25); // 25cm
+        ec.setClusterTolerance (0.4); // 40cm
 
-        ec.setMinClusterSize (100); //num minimo  di punti che deve avere il cluster
+        ec.setMinClusterSize (25); //num minimo  di punti che deve avere il cluster
         ec.setMaxClusterSize (25000);   //num massimo di punti che può avere il cluster
         ec.setSearchMethod (tree);
         ec.setInputCloud (cloud_filtered);
