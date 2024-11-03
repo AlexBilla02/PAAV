@@ -31,7 +31,6 @@ int main(int argc, char *argv[])
     {
         // Clear the render
         renderer.clearViewer();
-
         while (!lidar_cloud.new_measurement)
             ; // wait for new data (we will execute the following code each 100ms)
 
@@ -58,7 +57,7 @@ int main(int argc, char *argv[])
         for (size_t i = 0; i < tracks.size(); ++i)
         {
             renderer.addCircle(tracks[i].getX(), tracks[i].getY(), tracks[i].getId());
-            renderer.addText(tracks[i].getX() + 0.01, tracks[i].getY() + 0.01, tracks[i].getId());
+            //renderer.addText(tracks[i].getX() + 0.01, tracks[i].getY() + 0.01, tracks[i].getId());
         }
 
         renderer.spinViewerOnce();

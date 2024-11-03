@@ -7,7 +7,7 @@ Tracklet::Tracklet(int idTrack, double x, double y)
 
   // initialize filter
   kf_.init(0.1);
-  kf_.setState(x, y);
+  kf_.setState(x, y,0.0,0.0);
 
   // set loss count to 0
   loss_count_ = 0;

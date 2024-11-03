@@ -40,7 +40,7 @@ namespace viewer
     void addCircle(float centroid_x, float centroid_y, int id);
 
     void clearRays();
-
+  
     void clearViewer();
 
     void addText(float centroid_x, float centroid_y, int id);

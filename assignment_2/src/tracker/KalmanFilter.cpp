@@ -1,5 +1,5 @@
 #include "tracker/KalmanFilter.h"
-
+#include <iostream>
 KalmanFilter::KalmanFilter()
 {
 }
@@ -38,7 +38,6 @@ void KalmanFilter::init(double dt)
       0., 1., 0., dt_,
       0., 0., 1., 0.,
       0., 0., 0., 1.;
-
   // set the acceleration noise components
   double noise_ax_ = 2.;
   double noise_ay_ = 2.;
@@ -60,8 +59,14 @@ void KalmanFilter::predict()
   // TODO
   // Implement Kalman Filter Predict
   //  x_ = ...
+
+  std::cout << "Predict - Stato iniziale x_:\n" << x_.transpose() << std::endl;
+  std::cout << "Predict - Covarianza iniziale P_:\n" << P_ << std::endl;
   x_ = F_ * x_;
   P_ = F_ * P_ * F_.transpose() + Q_;
+
+  std::cout << "Predict - Stato predetto x_:\n" << x_.transpose() << std::endl;
+  std::cout << "Predict - Covarianza predetta P_:\n" << P_ << std::endl;
   //  P_ = ...
 }
 
@@ -88,5 +93,5 @@ void KalmanFilter::update(const Eigen::VectorXd &z)
 
 void KalmanFilter::setState(double x, double y)
 {
-  x_ << x, y, 0., 0.;
+  x_ << x, y, 0.0,0.0;
 }

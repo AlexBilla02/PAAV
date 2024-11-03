@@ -3,8 +3,8 @@
 Tracker::Tracker()
 {
     cur_id_ = 0;
-    distance_threshold_ = 1.5; // meters
-    covariance_threshold = 1.0; 
+    distance_threshold_ = 0.5; // meters
+    covariance_threshold = 0.0; 
     loss_threshold = 0; //number of frames the track has not been seen
 }
 Tracker::~Tracker()
@@ -16,16 +16,20 @@ Tracker::~Tracker()
 */
 void Tracker::removeTracks()
 {
+    const size_t max_tracks = 10; // Limite massimo di tracce attive
     std::vector<Tracklet> tracks_to_keep;
 
-    for (size_t i = 0; i < tracks_.size(); ++i)
+    for (auto& track : tracks_)
     {
-        // TODO
-        // Implement logic to discard old tracklets
-        // logic_to_keep is a dummy placeholder to make the code compile and should be subsituted with the real condition
-        bool logic_to_keep = true;
-        if (logic_to_keep)
-            tracks_to_keep.push_back(tracks_[i]);
+        if (track.getLossCount() < loss_threshold)
+        {
+            tracks_to_keep.push_back(track);
+        }
+    }
+
+    // Assicurati che la lista di tracce non superi il numero massimo di tracce attive
+    if (tracks_to_keep.size() > max_tracks) {
+        tracks_to_keep.erase(tracks_to_keep.begin(), tracks_to_keep.end() - max_tracks);
     }
 
     tracks_.swap(tracks_to_keep);
@@ -61,10 +65,17 @@ void Tracker::dataAssociation(std::vector<bool> &associated_detections, const st
 
         for (size_t j = 0; j < associated_detections.size(); ++j)
         {
-            // TODO
-            // Implement logic to find the closest detection (centroids_x,centroids_y) 
-            // to the current track (tracks_) 
+            // Calcola la distanza euclidea tra il centro della rilevazione e la traccia corrente
+            double dx = centroids_x[j] - tracks_[i].getX();
+            double dy = centroids_y[j] - tracks_[i].getY();
+            double dist = std::sqrt(dx * dx + dy * dy); // distanza euclidea
             
+            // Se questa distanza è la minima trovata finora, aggiorna la distanza minima e l'indice del rilevamento
+            if (dist < min_dist)
+            {
+                min_dist = dist;
+                closest_point_id = j;
+            }
         }
 
         // Associate the closest detection to a tracklet
@@ -80,13 +91,24 @@ void Tracker::track(const std::vector<double> &centroids_x,
                     const std::vector<double> &centroids_y,
                     bool lidarStatus)
 {
+    removeTracks();
     std::vector<bool> associated_detections(centroids_x.size(), false);
+    addTracks(associated_detections, centroids_x, centroids_y);
     // TODO: Predict the position
     //For each track --> Predict the position of the tracklets
+    std::cerr<<tracks_.size();
     for (size_t i = 0; i < tracks_.size(); ++i)
     {
+        // Log della previsione
+        std::cerr << "Prima della predizione - Track " << i
+                  << " posizione attuale: x = " << tracks_[i].getX()
+                  << ", y = " << tracks_[i].getY() << "\n";
+                  
         tracks_[i].predict();
-        std::cerr << "Track " << i << " predizione: x = " << tracks_[i].getX()
+        
+        // Log dopo la predizione
+        std::cerr << "Dopo la predizione - Track " << i 
+                  << " predizione: x = " << tracks_[i].getX()
                   << ", y = " << tracks_[i].getY() << "\n";
     }
     // TODO: Associate the predictions with the detections
@@ -103,12 +125,20 @@ void Tracker::track(const std::vector<double> &centroids_x,
     {
         auto det_id = associated_track_det_ids_[i].first;
         auto track_id = associated_track_det_ids_[i].second;
-        tracks_[track_id].update(centroids_x[det_id], centroids_y[det_id], lidarStatus);
-        std::cerr << "Traccia " << track_id << " aggiornata a: x = " 
-                  << tracks_[track_id].getX() << ", y = " << tracks_[track_id].getY() << "\n";
-    }
+        std::cerr << "Prima dell'aggiornamento - Track " << track_id 
+                  << " predizione: x = " << tracks_[track_id].getX()
+                  << ", y = " << tracks_[track_id].getY() << "\n";
 
+        tracks_[track_id].update(centroids_x[det_id], centroids_y[det_id], lidarStatus);
+
+        std::cerr << "Dopo l'aggiornamento - Track " << track_id 
+                  << " nuova posizione: x = " << tracks_[track_id].getX()
+                  << ", y = " << tracks_[track_id].getY() << "\n";
+    }
+    
     // TODO: Remove dead tracklets
 
     // TODO: Add new tracklets
 }
+
+
