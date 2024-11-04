@@ -154,32 +154,60 @@ void Tracker::track(const std::vector<double> &centroids_x,
         }
     }
     
-    // Stampa l'ID e la distanza del tracklet con il percorso più lungo
+    // #1: Stampa l'ID e la distanza del tracklet con il percorso più lungo
     if (max_distance_id != -1) {
         std::cout << "Tracklet con il percorso più lungo: ID = " 
                   << max_distance_id << ", Distanza totale percorsa = " 
                   << max_distance << " metri\n";
     }
 
-    //FUNZIONE AGGIUNTIVA #2
+    //FUNZIONE AGGIUNTIVA #2 e #3
     // Controlla se i tracklet entrano nella ROI e aggiorna il conteggio
     for (auto &track : tracks_) {
         double x = track.getX();
         double y = track.getY();
 
-        // Verifica se il tracklet è entrato nella ROI
+        // Verifica se il tracklet è nella ROI
         if (x >= roi_x1 && x <= roi_x2 && y >= roi_y1 && y <= roi_y2) {
+            track.enterROI(); // Invoca il metodo per gestire il tempo di ingresso nella ROI
             int track_id = track.getId();
             if (!tracklet_in_roi_[track_id]) {
-                // Incrementa solo la prima volta
-                roi_entry_count_++;
+                roi_entry_count_++;     //aumento il counter di oggetti entrati nella ROI (per funzione aggiuntiva #2)
                 tracklet_in_roi_[track_id] = true;
             }
+        } else {
+            track.exitROI(); // Invoca il metodo per gestire l'uscita dalla ROI
         }
     }
 
-    // Funzionalità aggiuntiva: Stampa degli oggetti entrati nella ROI
+    // #3: stampo il tempo totale in cui ogni tracklet è rimasto nella ROI
+    double max_time_in_roi = 0.0; // Tempo massimo nella ROI
+    int max_time_tracklet_id = -1; // ID del tracklet con il tempo massimo
+
+    for (const auto &track : tracks_) {
+        double time_in_roi = track.getTimeInROI();
+        if (time_in_roi<1e-5)       //tolgo rumore per alcuni tracklet
+            time_in_roi=0;
+        std::cout << "Tracklet ID: " << track.getId() 
+                  << ", Tempo nella ROI: " << time_in_roi << " secondi\n";
+
+        // Controlla se questo tracklet ha passato più tempo nella ROI
+        if (time_in_roi > max_time_in_roi) {
+            max_time_in_roi = time_in_roi; // Aggiorna il tempo massimo
+            max_time_tracklet_id = track.getId(); // Aggiorna l'ID corrispondente
+        }
+    }
+
+    // #2: Stampa degli oggetti entrati nella ROI
     std::cout << "Numero di oggetti entrati nella ROI: " << roi_entry_count_ << std::endl;
+
+
+    // FUNZIONE #4: Stampa dell'ID del tracklet con il tempo massimo nella ROI
+    if (max_time_tracklet_id != -1) {
+        std::cout << "Tracklet che ha trascorso più tempo nella ROI: ID = " 
+                  << max_time_tracklet_id << ", Tempo totale nella ROI = " 
+                  << max_time_in_roi << " secondi\n";
+    }
 }
 
 

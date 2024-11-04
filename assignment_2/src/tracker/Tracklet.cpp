@@ -1,5 +1,10 @@
 #include "tracker/Tracklet.h"
 #include <iostream>
+#include <ctime>
+
+double getCurrentTime() {
+    return static_cast<double>(std::clock()) / CLOCKS_PER_SEC; // Tempo in secondi
+}
 Tracklet::Tracklet(int idTrack, double x, double y)
 {
   // set id
@@ -12,6 +17,8 @@ Tracklet::Tracklet(int idTrack, double x, double y)
   // set loss count to 0
   loss_count_ = 0;
   total_distance_=0;
+  has_entered_roi_ = false; // campo per controllare se è mai entrato nella ROI
+
 }
 
 Tracklet::~Tracklet()
@@ -50,3 +57,32 @@ void Tracklet::update(double x, double y, bool lidarStatus)
     loss_count_ = 0;
   }
 }
+
+void Tracklet::enterROI() {
+    if (!in_roi_) {
+        in_roi_ = true;
+        entry_time_ = getCurrentTime(); // Memorizza il tempo di ingresso
+
+        if (!has_entered_roi_) {
+            time_in_roi_ = 0; // Se è la prima volta che entra, azzera il tempo in ROI
+            has_entered_roi_ = true; // Segna che ha già visitato la ROI
+        }
+    }
+}
+
+void Tracklet::exitROI() {
+    if (in_roi_) {
+        time_in_roi_ += getCurrentTime() - entry_time_;
+        in_roi_ = false;
+    }
+}
+
+double Tracklet::getTimeInROI() const {
+  if (in_roi_){
+    return time_in_roi_+(getCurrentTime()-entry_time_);
+  }
+  else
+    return time_in_roi_;
+}
+
+

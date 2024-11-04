@@ -12,6 +12,10 @@ public:
   Tracklet(int idTrack, double x, double y);
   ~Tracklet();
 
+  void enterROI(); // Metodo per gestire l'ingresso nella ROI
+  void exitROI();  // Metodo per gestire l'uscita dalla ROI
+  double getTimeInROI() const; // Restituisce il tempo totale nella ROI
+
   void predict();
   void update(double x, double y, bool lidarStatus);
 
@@ -33,6 +37,10 @@ private:
   // number of loss since last update
   int loss_count_;
   double total_distance_;
+  double time_in_roi_; // Tempo totale nella ROI
+  bool in_roi_;        // Flag per controllare se il tracklet è nella ROI
+  double entry_time_;  // Tempo di ingresso nella ROI
+  bool has_entered_roi_;
 };
 
 #endif // TRACKLET_H_
