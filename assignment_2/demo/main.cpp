@@ -8,7 +8,10 @@ int main(int argc, char *argv[])
 {
     int64_t freq = 100;            // Frequency of the thread dedicated to process the point cloud
     std::string log_path = "../build/log";  // TODO: define the path to the log folder
-
+    double roi_x1 = -2.0;
+    double roi_x2 = 2.0;
+    double roi_y1 = -2.0;
+    double roi_y2 = 2.0;
     std::ifstream dataFile(log_path, std::ios::in | std::ios::binary);
     if (!dataFile)
     {
@@ -21,7 +24,7 @@ int main(int argc, char *argv[])
     renderer.clearViewer();
 
     // Instantiate the tracker
-    Tracker tracker;
+    Tracker tracker(roi_x1, roi_x2, roi_y1, roi_y2);
 
     // Spawn the thread that process the point cloud and performs the clustering
     CloudManager lidar_cloud(log_path, freq, renderer);
@@ -33,6 +36,8 @@ int main(int argc, char *argv[])
         renderer.clearViewer();
         while (!lidar_cloud.new_measurement)
             ; // wait for new data (we will execute the following code each 100ms)
+        
+        renderer.renderROI(roi_x1, roi_x2, roi_y1, roi_y2, 0);
 
         // fetch data
         lidar_cloud.mtxData.lock();
@@ -58,7 +63,7 @@ int main(int argc, char *argv[])
         {
             renderer.addCircle(tracks[i].getX(), tracks[i].getY(), tracks[i].getId());
 
-            //renderer.addText(tracks[i].getX() + 0.01, tracks[i].getY() + 0.01, tracks[i].getId());
+            renderer.addText(tracks[i].getX() + 0.01, tracks[i].getY() + 0.01, tracks[i].getId());
         }
 
         renderer.spinViewerOnce();

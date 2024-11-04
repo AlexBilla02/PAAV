@@ -92,6 +92,22 @@ namespace viewer
     viewer_->setPointCloudRenderingProperties(pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 2, name);
   }
 
+  void Renderer::renderROI(double x1, double x2, double y1, double y2, int id)
+    {
+
+      // Aggiunge quattro linee per i lati della ROI
+      viewer_->addLine(pcl::PointXYZ(x1, y1, 0), pcl::PointXYZ(x2, y1, 0), 1.0, 0.0, 0.0, "roi_line_bottom_" + std::to_string(id));
+      viewer_->addLine(pcl::PointXYZ(x2, y1, 0), pcl::PointXYZ(x2, y2, 0), 1.0, 0.0, 0.0, "roi_line_right_" + std::to_string(id));
+      viewer_->addLine(pcl::PointXYZ(x2, y2, 0), pcl::PointXYZ(x1, y2, 0), 1.0, 0.0, 0.0, "roi_line_top_" + std::to_string(id));
+      viewer_->addLine(pcl::PointXYZ(x1, y2, 0), pcl::PointXYZ(x1, y1, 0), 1.0, 0.0, 0.0, "roi_line_left_" + std::to_string(id));
+
+      // Imposta proprietà di rendering per le linee della ROI
+      viewer_->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 2, "roi_line_bottom_" + std::to_string(id));
+      viewer_->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 2, "roi_line_right_" + std::to_string(id));
+      viewer_->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 2, "roi_line_top_" + std::to_string(id));
+      viewer_->setShapeRenderingProperties(pcl::visualization::PCL_VISUALIZER_LINE_WIDTH, 2, "roi_line_left_" + std::to_string(id));
+    }
+
   // Draw wire frame box with filled transparent color
   void Renderer::renderBox(const Box &box, const int id, const Color &color, float opacity)
   {

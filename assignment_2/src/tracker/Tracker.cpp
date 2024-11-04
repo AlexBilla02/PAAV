@@ -5,10 +5,26 @@ Tracker::Tracker()
     cur_id_ = 0;
     distance_threshold_ = 1.2; // meters
     covariance_threshold = 0.5; 
-    loss_threshold = 10; //number of frames the track has not been seen
+    loss_threshold = 15; //number of frames the track has not been seen
+    roi_entry_count_ = 0;
+}
+
+//secondo metodo costruttore per contenere informazioni sulla regione di interesse
+Tracker::Tracker(double roi_x1, double roi_x2, double roi_y1, double roi_y2)
+    : roi_x1(roi_x1), roi_x2(roi_x2), roi_y1(roi_y1), roi_y2(roi_y2) // inizializza la ROI
+{
+    cur_id_ = 0;
+    distance_threshold_ = 1.2; // meters
+    covariance_threshold = 0.5; 
+    loss_threshold = 15; // numero di frame in cui la traccia non è stata vista
+    roi_entry_count_ = 0;
 }
 Tracker::~Tracker()
 {
+}
+
+int Tracker::getROIEntryCount() const {
+    return roi_entry_count_;
 }
 
 /*
@@ -91,23 +107,17 @@ void Tracker::track(const std::vector<double> &centroids_x,
 {
     
     std::vector<bool> associated_detections(centroids_x.size(), false);
-    addTracks(associated_detections, centroids_x, centroids_y);
     // TODO: Predict the position
     //For each track --> Predict the position of the tracklets
-    std::cerr<<tracks_.size();
     for (size_t i = 0; i < tracks_.size(); ++i)
     {
         // Log della previsione
-        std::cerr << "Prima della predizione - Track " << i
-                  << " posizione attuale: x = " << tracks_[i].getX()
-                  << ", y = " << tracks_[i].getY() << "\n";
+        //std::cerr << "Prima della predizione - Track " << i<< " posizione attuale: x = " << tracks_[i].getX()<< ", y = " << tracks_[i].getY() << "\n";
                   
         tracks_[i].predict();
         
         // Log dopo la predizione
-        std::cerr << "Dopo la predizione - Track " << i 
-                  << " predizione: x = " << tracks_[i].getX()
-                  << ", y = " << tracks_[i].getY() << "\n";
+        //std::cerr << "Dopo la predizione - Track " << i<< " predizione: x = " << tracks_[i].getX()<< ", y = " << tracks_[i].getY() << "\n";
     }
     // TODO: Associate the predictions with the detections
     dataAssociation(associated_detections, centroids_x, centroids_y);
@@ -115,28 +125,26 @@ void Tracker::track(const std::vector<double> &centroids_x,
     {
         auto det_id = assoc.first;
         auto track_id = assoc.second;
-        std::cerr << "Associazione: rilevamento " << det_id
-                  << " associato a traccia " << track_id << "\n";
+        //std::cerr << "Associazione: rilevamento " << det_id<< " associato a traccia " << track_id << "\n";
     }
     // Update tracklets with the new detections
     for (int i = 0; i < associated_track_det_ids_.size(); ++i)
     {
         auto det_id = associated_track_det_ids_[i].first;
         auto track_id = associated_track_det_ids_[i].second;
-        std::cerr << "Prima dell'aggiornamento - Track " << track_id 
-                  << " predizione: x = " << tracks_[track_id].getX()
-                  << ", y = " << tracks_[track_id].getY() << "\n";
+        //std::cerr << "Prima dell'aggiornamento - Track " << track_id<< " predizione: x = " << tracks_[track_id].getX()<< ", y = " << tracks_[track_id].getY() << "\n";
 
         tracks_[track_id].update(centroids_x[det_id], centroids_y[det_id], lidarStatus);
 
-        std::cerr << "Dopo l'aggiornamento - Track " << track_id 
-                  << " nuova posizione: x = " << tracks_[track_id].getX()
-                  << ", y = " << tracks_[track_id].getY() << "\n";
+        //std::cerr << "Dopo l'aggiornamento - Track " << track_id<< " nuova posizione: x = " << tracks_[track_id].getX()<< ", y = " << tracks_[track_id].getY() << "\n";
     }
     
     // TODO: Remove dead tracklets
     removeTracks();
     // TODO: Add new tracklets
+    addTracks(associated_detections, centroids_x, centroids_y);
+
+    //FUNZIONE AGGIUNTIVA #1
     double max_distance = 0.0;
     int max_distance_id = -1;
     for (const auto &track : tracks_) {
@@ -149,9 +157,29 @@ void Tracker::track(const std::vector<double> &centroids_x,
     // Stampa l'ID e la distanza del tracklet con il percorso più lungo
     if (max_distance_id != -1) {
         std::cout << "Tracklet con il percorso più lungo: ID = " 
-                  << max_distance_id << ", Distanza totale = " 
+                  << max_distance_id << ", Distanza totale percorsa = " 
                   << max_distance << " metri\n";
     }
+
+    //FUNZIONE AGGIUNTIVA #2
+    // Controlla se i tracklet entrano nella ROI e aggiorna il conteggio
+    for (auto &track : tracks_) {
+        double x = track.getX();
+        double y = track.getY();
+
+        // Verifica se il tracklet è entrato nella ROI
+        if (x >= roi_x1 && x <= roi_x2 && y >= roi_y1 && y <= roi_y2) {
+            int track_id = track.getId();
+            if (!tracklet_in_roi_[track_id]) {
+                // Incrementa solo la prima volta
+                roi_entry_count_++;
+                tracklet_in_roi_[track_id] = true;
+            }
+        }
+    }
+
+    // Funzionalità aggiuntiva: Stampa degli oggetti entrati nella ROI
+    std::cout << "Numero di oggetti entrati nella ROI: " << roi_entry_count_ << std::endl;
 }
 
 

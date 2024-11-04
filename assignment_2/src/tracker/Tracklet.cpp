@@ -36,7 +36,6 @@ void Tracklet::update(double x, double y, bool lidarStatus)
     //posizione precedente
     double prev_x = kf_.getX();
     double prev_y = kf_.getY();
-    std::cout<<"PREV:"<<prev_x<<" "<<prev_y<<"\n";
     // Aggiorno misura 
     raw_measurements_ << x, y;
     kf_.update(raw_measurements_);
@@ -45,9 +44,7 @@ void Tracklet::update(double x, double y, bool lidarStatus)
     double dx = x - prev_x;
     double dy = y - prev_y;
     double distance_moved = std::sqrt(dx * dx + dy * dy);
-    std::cout<<"DIFF:"<<distance_moved<<"\n";
     total_distance_ += distance_moved;
-    std::cout<<"TOT_DIST:"<<total_distance_<<"\n";
 
     // Reset del contatore di perdita
     loss_count_ = 0;
