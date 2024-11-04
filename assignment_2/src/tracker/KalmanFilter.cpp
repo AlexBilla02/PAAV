@@ -60,13 +60,9 @@ void KalmanFilter::predict()
   // Implement Kalman Filter Predict
   //  x_ = ...
 
-  std::cout << "Predict - Stato iniziale x_:\n" << x_.transpose() << std::endl;
-  std::cout << "Predict - Covarianza iniziale P_:\n" << P_ << std::endl;
   x_ = F_ * x_;
   P_ = F_ * P_ * F_.transpose() + Q_;
 
-  std::cout << "Predict - Stato predetto x_:\n" << x_.transpose() << std::endl;
-  std::cout << "Predict - Covarianza predetta P_:\n" << P_ << std::endl;
   //  P_ = ...
 }
 

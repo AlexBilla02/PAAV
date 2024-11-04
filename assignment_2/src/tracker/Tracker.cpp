@@ -3,9 +3,9 @@
 Tracker::Tracker()
 {
     cur_id_ = 0;
-    distance_threshold_ = 0.5; // meters
-    covariance_threshold = 0.0; 
-    loss_threshold = 0; //number of frames the track has not been seen
+    distance_threshold_ = 1.2; // meters
+    covariance_threshold = 0.5; 
+    loss_threshold = 10; //number of frames the track has not been seen
 }
 Tracker::~Tracker()
 {
@@ -16,20 +16,18 @@ Tracker::~Tracker()
 */
 void Tracker::removeTracks()
 {
-    const size_t max_tracks = 10; // Limite massimo di tracce attive
     std::vector<Tracklet> tracks_to_keep;
 
-    for (auto& track : tracks_)
+    for (size_t i = 0; i < tracks_.size(); ++i)
     {
-        if (track.getLossCount() < loss_threshold)
-        {
-            tracks_to_keep.push_back(track);
+        // TODO
+        // Implement logic to discard old tracklets
+        if(tracks_[i].getXCovariance() < covariance_threshold && tracks_[i].getYCovariance() < covariance_threshold){
+            if (tracks_[i].getLossCount() < loss_threshold){
+                tracks_to_keep.push_back(tracks_[i]);
+            }
         }
-    }
-
-    // Assicurati che la lista di tracce non superi il numero massimo di tracce attive
-    if (tracks_to_keep.size() > max_tracks) {
-        tracks_to_keep.erase(tracks_to_keep.begin(), tracks_to_keep.end() - max_tracks);
+        
     }
 
     tracks_.swap(tracks_to_keep);
@@ -91,7 +89,7 @@ void Tracker::track(const std::vector<double> &centroids_x,
                     const std::vector<double> &centroids_y,
                     bool lidarStatus)
 {
-    removeTracks();
+    
     std::vector<bool> associated_detections(centroids_x.size(), false);
     addTracks(associated_detections, centroids_x, centroids_y);
     // TODO: Predict the position
@@ -137,8 +135,23 @@ void Tracker::track(const std::vector<double> &centroids_x,
     }
     
     // TODO: Remove dead tracklets
-
+    removeTracks();
     // TODO: Add new tracklets
+    double max_distance = 0.0;
+    int max_distance_id = -1;
+    for (const auto &track : tracks_) {
+        if (track.getTotalDistance() > max_distance) {
+            max_distance = track.getTotalDistance();
+            max_distance_id = track.getId();
+        }
+    }
+    
+    // Stampa l'ID e la distanza del tracklet con il percorso più lungo
+    if (max_distance_id != -1) {
+        std::cout << "Tracklet con il percorso più lungo: ID = " 
+                  << max_distance_id << ", Distanza totale = " 
+                  << max_distance << " metri\n";
+    }
 }
 
 

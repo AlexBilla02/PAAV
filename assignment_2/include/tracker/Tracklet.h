@@ -21,8 +21,8 @@ public:
   double getXCovariance() { return kf_.getXCovariance(); }
   double getYCovariance() { return kf_.getYCovariance(); }
   int getLossCount() { return loss_count_; }
-  int getId() { return id_; }
-
+  int getId() const { return id_; }
+  double getTotalDistance() const { return total_distance_; }
 private:
   // filter
   KalmanFilter kf_;
@@ -32,6 +32,7 @@ private:
 
   // number of loss since last update
   int loss_count_;
+  double total_distance_;
 };
 
 #endif // TRACKLET_H_
