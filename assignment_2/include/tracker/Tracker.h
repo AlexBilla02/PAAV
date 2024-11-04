@@ -45,7 +45,7 @@ private:
   double covariance_threshold;
   int loss_threshold;
 
-  int roi_entry_count_;  // Conta il numero di oggetti entrati nella ROI
+  int roi_entry_count_;  // Contatore del numero di oggetti entrati nella ROI
   double roi_x1;  // Limite inferiore della ROI in x
   double roi_x2;  // Limite superiore della ROI in x
   double roi_y1;  // Limite inferiore della ROI in y

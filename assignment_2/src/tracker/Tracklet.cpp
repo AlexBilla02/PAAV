@@ -61,11 +61,11 @@ void Tracklet::update(double x, double y, bool lidarStatus)
 void Tracklet::enterROI() {
     if (!in_roi_) {
         in_roi_ = true;
-        entry_time_ = getCurrentTime(); // Memorizza il tempo di ingresso
+        entry_time_ = getCurrentTime(); 
 
         if (!has_entered_roi_) {
-            time_in_roi_ = 0; // Se è la prima volta che entra, azzera il tempo in ROI
-            has_entered_roi_ = true; // Segna che ha già visitato la ROI
+            time_in_roi_ = 0; 
+            has_entered_roi_ = true; 
         }
     }
 }

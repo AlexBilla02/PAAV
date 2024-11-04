@@ -16,7 +16,7 @@ Tracker::Tracker(double roi_x1, double roi_x2, double roi_y1, double roi_y2)
     cur_id_ = 0;
     distance_threshold_ = 1.2; // meters
     covariance_threshold = 0.5; 
-    loss_threshold = 15; // numero di frame in cui la traccia non è stata vista
+    loss_threshold = 15; 
     roi_entry_count_ = 0;
 }
 Tracker::~Tracker()
@@ -112,10 +112,8 @@ void Tracker::track(const std::vector<double> &centroids_x,
     for (size_t i = 0; i < tracks_.size(); ++i)
     {
         // Log della previsione
-        //std::cerr << "Prima della predizione - Track " << i<< " posizione attuale: x = " << tracks_[i].getX()<< ", y = " << tracks_[i].getY() << "\n";
-                  
+        //std::cerr << "Prima della predizione - Track " << i<< " posizione attuale: x = " << tracks_[i].getX()<< ", y = " << tracks_[i].getY() << "\n";       
         tracks_[i].predict();
-        
         // Log dopo la predizione
         //std::cerr << "Dopo la predizione - Track " << i<< " predizione: x = " << tracks_[i].getX()<< ", y = " << tracks_[i].getY() << "\n";
     }
@@ -133,9 +131,7 @@ void Tracker::track(const std::vector<double> &centroids_x,
         auto det_id = associated_track_det_ids_[i].first;
         auto track_id = associated_track_det_ids_[i].second;
         //std::cerr << "Prima dell'aggiornamento - Track " << track_id<< " predizione: x = " << tracks_[track_id].getX()<< ", y = " << tracks_[track_id].getY() << "\n";
-
         tracks_[track_id].update(centroids_x[det_id], centroids_y[det_id], lidarStatus);
-
         //std::cerr << "Dopo l'aggiornamento - Track " << track_id<< " nuova posizione: x = " << tracks_[track_id].getX()<< ", y = " << tracks_[track_id].getY() << "\n";
     }
     
@@ -167,16 +163,16 @@ void Tracker::track(const std::vector<double> &centroids_x,
         double x = track.getX();
         double y = track.getY();
 
-        // Verifica se il tracklet è nella ROI
+        // Verifico se il tracklet è nella ROI
         if (x >= roi_x1 && x <= roi_x2 && y >= roi_y1 && y <= roi_y2) {
-            track.enterROI(); // Invoca il metodo per gestire il tempo di ingresso nella ROI
+            track.enterROI(); 
             int track_id = track.getId();
             if (!tracklet_in_roi_[track_id]) {
                 roi_entry_count_++;     //aumento il counter di oggetti entrati nella ROI (per funzione aggiuntiva #2)
                 tracklet_in_roi_[track_id] = true;
             }
         } else {
-            track.exitROI(); // Invoca il metodo per gestire l'uscita dalla ROI
+            track.exitROI(); 
         }
     }
 
@@ -186,15 +182,15 @@ void Tracker::track(const std::vector<double> &centroids_x,
 
     for (const auto &track : tracks_) {
         double time_in_roi = track.getTimeInROI();
-        if (time_in_roi<1e-5)       //tolgo rumore per alcuni tracklet
+        if (time_in_roi<1e-5)       //rimozione rumore per alcuni tracklet
             time_in_roi=0;
         std::cout << "Tracklet ID: " << track.getId() 
                   << ", Tempo nella ROI: " << time_in_roi << " secondi\n";
 
-        // Controlla se questo tracklet ha passato più tempo nella ROI
+        
         if (time_in_roi > max_time_in_roi) {
-            max_time_in_roi = time_in_roi; // Aggiorna il tempo massimo
-            max_time_tracklet_id = track.getId(); // Aggiorna l'ID corrispondente
+            max_time_in_roi = time_in_roi; // update tempo massimo
+            max_time_tracklet_id = track.getId(); // update ID corrispondente
         }
     }
 
@@ -206,7 +202,7 @@ void Tracker::track(const std::vector<double> &centroids_x,
     if (max_time_tracklet_id != -1) {
         std::cout << "Tracklet che ha trascorso più tempo nella ROI: ID = " 
                   << max_time_tracklet_id << ", Tempo totale nella ROI = " 
-                  << max_time_in_roi << " secondi\n";
+                  << max_time_in_roi << " secondi\n\n";
     }
 }
 
