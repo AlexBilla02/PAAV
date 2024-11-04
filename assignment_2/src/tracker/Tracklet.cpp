@@ -48,8 +48,8 @@ void Tracklet::update(double x, double y, bool lidarStatus)
     kf_.update(raw_measurements_);
 
     // Calcolo distanza percorsa dall'ultimo aggiornamento
-    double dx = x - prev_x;
-    double dy = y - prev_y;
+    double dx = kf_.getX()-prev_x;
+    double dy = kf_.getY()-prev_y;
     double distance_moved = std::sqrt(dx * dx + dy * dy);
     total_distance_ += distance_moved;
 
