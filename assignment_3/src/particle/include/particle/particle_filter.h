@@ -19,6 +19,7 @@ struct Particle {
 };
 
 
+double manhattanDistance(double x1, double y1, double x2, double y2);
 
 class ParticleFilter {
 	
@@ -82,7 +83,10 @@ public:
 	 * @param predicted Vector of predicted landmark observations
 	 * @param observations Vector of landmark observations
 	 */
+	//double manhattanDistance(double x1,double y1,double x2,double y2);
 	void dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations);
+	void dataAssociationManhattan(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations);
+
 	
 	/**
 	 * updateWeights Updates the weights for each particle based on the likelihood of the 

@@ -101,6 +101,8 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
 * Output:
 *  Associated observations to mapLandmarks (perform the association using the ids)
 */
+
+
 void ParticleFilter::dataAssociation(std::vector<LandmarkObs> mapLandmark, std::vector<LandmarkObs>& observations) {
    //TODO
    //TIP: Assign to observations[i].id the id of the landmark with the smallest euclidean distance
@@ -112,6 +114,26 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> mapLandmark, std::
                                 (mapLandmark[j].x - observations[i].x) +
                                 (mapLandmark[j].y - observations[i].y) *
                                 (mapLandmark[j].y - observations[i].y));
+        if(dist < min_dist){
+            min_dist=dist;
+            min_dist_id=mapLandmark[j].id;
+        }
+    }
+    observations[i].id = min_dist_id;
+  }
+}
+double manhattanDistance(double x1, double y1, double x2, double y2) {
+    return std::fabs(x1 - x2) + std::fabs(y1 - y2);
+}
+void ParticleFilter::dataAssociationManhattan(std::vector<LandmarkObs> mapLandmark, std::vector<LandmarkObs>& observations) {
+   //TODO
+   //TIP: Assign to observations[i].id the id of the landmark with the smallest euclidean distance
+  for(int i=0; i<observations.size(); i++){
+    double min_dist = std::numeric_limits<double>::max();
+    int min_dist_id;
+    for(int j=0; j<mapLandmark.size(); j++){
+        double dist = manhattanDistance(mapLandmark[j].x, mapLandmark[j].y, 
+                                            observations[i].x, observations[i].y);
         if(dist < min_dist){
             min_dist=dist;
             min_dist_id=mapLandmark[j].id;
