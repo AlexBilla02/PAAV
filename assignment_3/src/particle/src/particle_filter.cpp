@@ -11,7 +11,8 @@
 using namespace std;
 
 static  default_random_engine gen;
-
+//EUCLIDEAN 1 --> dataAssociation() --- EUCLIDEAN 0 --> dataAssociationManhattan()
+#define EUCLIDEAN 0     
 /*
 * TODO
 * This function initialize randomly the particles
@@ -19,18 +20,16 @@ static  default_random_engine gen;
 *  std - noise that might be added to the position
 *  nParticles - number of particles
 */
-void ParticleFilter::init_random(double std[], int nParticles) {
-  num_particles = nParticles;
+void ParticleFilter::init_random(int nParticles, std::pair<float, float> minPt, std::pair<float, float> maxPt) {
+    num_particles = nParticles;
+    uniform_real_distribution<double> dist_x(minPt.first, maxPt.first);
+    uniform_real_distribution<double> dist_y(minPt.second, maxPt.second);
+    normal_distribution<double> dist_theta(0, 2 * M_PI);
 
-  std::normal_distribution<double> dist_x(-std[0], std[0]); //random value between [-noise.x,+noise.x]
-  std::normal_distribution<double> dist_y(-std[1], std[1]);
-  std::normal_distribution<double> dist_theta(-std[2], std[2]);
-//TODO
-  for(int i=0; i < num_particles; i++){
-    particles.push_back(Particle(dist_x(gen), dist_y(gen), dist_theta(gen))); 
-  }
+    for(int i=0; i < num_particles; i++){
+        particles.push_back(Particle(dist_x(gen), dist_y(gen), dist_theta(gen))); 
+    }
     is_initialized=true;
-
 }
 
 /*
@@ -189,8 +188,11 @@ void ParticleFilter::updateWeights(double std_landmark[],
         for(int j=0; j<observations.size();j++)
           transformed_observations.push_back(transformation(observations[j], particles[i]));        
         //TODO: perform the data association (associate the landmarks to the observations)
-        dataAssociation(mapLandmark, transformed_observations);
-
+        #if EUCLIDEAN==1
+          dataAssociation(mapLandmark, transformed_observations);
+        #elif EUCLIDEAN==0
+          dataAssociationManhattan(mapLandmark,transformed_observations);
+        #endif
         particles[i].weight = 1.0;
         // Compute the probability
 		//The particles final weight can be represented as the product of each measurement’s Multivariate-Gaussian probability density

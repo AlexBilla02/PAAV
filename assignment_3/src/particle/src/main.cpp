@@ -15,6 +15,11 @@
 * Define the proper number of particles
 */
 #define NPARTICLES 1000
+//INIT 0 --> init_random() --- INIT 1 --> init()
+#define INIT 1  
+//METHOD_RESAMPLING 0 --> wheel --- METHOD_RESAMPLING 1 -->systematic    
+#define METHOD_RESAMPLING 0     
+
 #define circleID "circle_id"
 #define reflectorID "reflector_id"
 
@@ -34,12 +39,11 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_particles(new pcl::PointCloud<pcl::Poi
 * TODO
 * Define the proper noise values
 */
-double sigma_init [3] = {0.2, 0.2, 0.2};  //[x,y,theta] initialization noise. 
-double sigma_pos [3]  = {0.05, 0.05, 0.05}; //[x,y,theta] movement noise. Try values between [0.5 and 0.01]
-double sigma_landmark [2] = {0.4, 0.4};     //[x,y] sensor measurement noise. Try values between [0.5 and 0.1]
+double sigma_init [3] = {0.3,0.3, 0.3};  //[x,y,theta] initialization noise. 
+double sigma_pos [3]  = {0.04, 0.04, 0.04}; //[x,y,theta] movement noise. Try values between [0.5 and 0.01]
+double sigma_landmark [2] = {0.25, 0.25};     //[x,y] sensor measurement noise. Try values between [0.5 and 0.1]
 std::vector<Color> colors = {Color(1,0,0), Color(1,1,0), Color(0,0,1), Color(1,0,1), Color(0,1,1)};
 control_s odom;
-bool method_resampling=false;
 
 // This function updates the position of the particles in the viewer
 void showPCstatus(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud,vector<Particle> particles){
@@ -130,11 +134,13 @@ void PointCloudCb(const sensor_msgs::PointCloud2ConstPtr& cloud_msg){
     pf.updateWeights(sigma_landmark, noisy_observations, map_mille);
 
     // Resample the particles
-    if(method_resampling==false)
+    #if METHOD_RESAMPLING==0
+        std::cout<<"ciao";
         pf.wheel_resample();
-    else
+    #elif METHOD_RESAMPLING==1
+        std::cout<<"hey";
         pf.systematic_resample();
-
+    #endif
     // Calculate and output the average weighted error of the particle filter over all time steps so far.
     Particle best_particle;
     vector<Particle> particles = pf.particles;
@@ -211,8 +217,13 @@ int main(int argc,char **argv)
     best_particles.push_back(p);
     
     // Init the particle filter
-    pf.init(GPS_x, GPS_y, GPS_theta, sigma_init, NPARTICLES);
-    //pf.init_random(sigma_init,NPARTICLES);
+    #if INIT == 0
+        pcl::PointXYZ minPt, maxPt;
+        pcl::getMinMax3D(*cloudReflectors, minPt, maxPt);
+        pf.init_random(NPARTICLES, std::pair<float, float>(minPt.x, minPt.y), std::pair<float, float>(maxPt.x, maxPt.y));
+    #elif INIT == 1
+        pf.init(GPS_x, GPS_y, GPS_theta, sigma_init, NPARTICLES);
+    #endif
 
     // Render all the particles
     for(int i=0;i<NPARTICLES;i++){
